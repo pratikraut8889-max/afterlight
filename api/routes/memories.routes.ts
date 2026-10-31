@@ -258,7 +258,7 @@ router.patch('/:id', async (req, res) => {
     return;
   }
 
-  res.json({
+  res.status(200).json({
     success: true,
     data: memory,
   });
