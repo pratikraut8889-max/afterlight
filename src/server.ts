@@ -1,3 +1,8 @@
+
+import dns from 'node:dns/promises';
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
+
+import "dotenv/config";
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
@@ -6,12 +11,13 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+  import api from '../api';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
-
+app.use('/api',   express.json({ limit: '1mb' }), api);
 /**
  * Example Express Rest API endpoints can be defined here.
  * Uncomment and define endpoints as necessary.
@@ -52,6 +58,7 @@ app.use((req, res, next) => {
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
  */
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
+  console.log('Starting Node Express server...', process.env["MONGODB_URI"] ? `Connecting to MongoDB with URI: ${process.env["MONGODB_URI"]}` : 'MONGODB_URI is not configured.');
   const port = process.env['PORT'] || 4000;
   app.listen(port, (error) => {
     if (error) {

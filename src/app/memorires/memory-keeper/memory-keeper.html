@@ -1,0 +1,338 @@
+
+<div class="afterlight-page relative min-h-screen overflow-hidden bg-[#0c0d0b] text-stone-100">
+  <div class="ambient-glow pointer-events-none absolute inset-0" aria-hidden="true"></div>
+
+  <header class="relative z-10 border-b border-white/[0.08]">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8">
+      <a href="/" class="flex items-center gap-3">
+        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-300 text-xl text-stone-950 shadow-lg shadow-amber-300/10">
+          ✳
+        </span>
+        <span>
+          <span class="block text-lg font-semibold tracking-wide">Afterlight</span>
+          <span class="block text-[11px] tracking-[0.16em] text-stone-500 uppercase">Your personal archive</span>
+        </span>
+      </a>
+
+      <div class="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2">
+        <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+        <span class="text-xs text-stone-300">Your memory garden</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10 mx-auto max-w-7xl px-5 py-10 sm:px-8 sm:py-16">
+    <section class="mb-12 grid items-end gap-8 md:grid-cols-[1fr_280px] md:gap-12">
+      <div class="max-w-3xl">
+        <p class="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-amber-300">
+          <span class="h-px w-8 bg-amber-300/70"></span>
+          Remember · Reflect · Preserve
+        </p>
+
+        <h1 class="text-5xl font-medium leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
+          The moments that
+          <span class="editorial-heading block italic text-amber-200">make us who we are.</span>
+        </h1>
+
+        <p class="mt-6 max-w-xl text-sm leading-7 text-stone-400 sm:text-base">
+          A little space for the stories, people, and details you never want
+          time to take away.
+        </p>
+      </div>
+
+      <aside class="relative overflow-hidden rounded-3xl border border-amber-200/15 bg-gradient-to-br from-amber-200/[0.10] to-white/[0.02] p-6">
+        <div class="absolute -right-8 -top-10 h-32 w-32 rounded-full bg-amber-200/[0.08] blur-2xl"></div>
+
+        <p class="relative text-xs uppercase tracking-[0.18em] text-stone-400">Your collection</p>
+        <div class="relative mt-4 flex items-end gap-3">
+          <span class="text-6xl font-light tracking-tight text-amber-200">{{ memories().length }}</span>
+          <span class="mb-2 text-sm text-stone-400">
+            {{ memories().length === 1 ? 'memory kept' : 'memories kept' }}
+          </span>
+        </div>
+
+        <div class="relative mt-5 border-t border-white/10 pt-4">
+          <p class="text-sm leading-6 text-stone-300">
+            Every story you save gives a moment somewhere to live.
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    @if (error) {
+      <div role="alert" class="mb-6 rounded-2xl border border-red-400/20 bg-red-950/40 p-4 text-sm text-red-200">
+        {{ error }}
+      </div>
+    }
+
+    @if (success) {
+      <div role="status" class="mb-6 rounded-2xl border border-emerald-400/20 bg-emerald-950/30 p-4 text-sm text-emerald-200">
+        {{ success }}
+      </div>
+    }
+
+    <div class="grid items-start gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-10">
+      <section class="editor-panel rounded-3xl border border-white/[0.09] bg-[#151613]/90 p-6 sm:p-8">
+        <div class="mb-7">
+          <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl border border-amber-200/15 bg-amber-200/[0.07] text-lg text-amber-200">
+            ✎
+          </div>
+
+          <p class="text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-300">
+            {{ editingId ? 'Make an edit' : 'A new chapter' }}
+          </p>
+
+          <h2 class="editorial-heading mt-2 text-3xl font-medium">
+            {{ editingId ? 'Revisit this memory' : 'Keep a memory' }}
+          </h2>
+
+          <p class="mt-3 text-sm leading-6 text-stone-400">
+            It doesn't have to be a big moment. Start with what you remember.
+          </p>
+        </div>
+
+        <form #memoryForm="ngForm" (ngSubmit)="saveMemory()" class="space-y-5">
+          <div>
+            <label for="title" class="mb-2 block text-xs font-medium tracking-wide text-stone-300">
+              Give this memory a title <span class="text-amber-300">*</span>
+            </label>
+            <input
+              id="title"
+              name="title"
+              [(ngModel)]="form.title"
+              required
+              maxlength="120"
+              placeholder="The summers at Grandma's"
+              class="memory-input w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm outline-none transition placeholder:text-stone-600 focus:border-amber-200/60 focus:bg-black/30"
+            />
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="personName" class="mb-2 block text-xs font-medium tracking-wide text-stone-300">
+                Who is this about? <span class="text-amber-300">*</span>
+              </label>
+              <input
+                id="personName"
+                name="personName"
+                [(ngModel)]="form.personName"
+                required
+                maxlength="120"
+                placeholder="Grandma"
+                class="memory-input w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm outline-none transition placeholder:text-stone-600 focus:border-amber-200/60"
+              />
+            </div>
+
+            <div>
+              <label for="relationship" class="mb-2 block text-xs font-medium tracking-wide text-stone-300">
+                Your relationship
+              </label>
+              <input
+                id="relationship"
+                name="relationship"
+                [(ngModel)]="form.relationship"
+                maxlength="80"
+                placeholder="Grandmother"
+                class="memory-input w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm outline-none transition placeholder:text-stone-600 focus:border-amber-200/60"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="story" class="mb-2 block text-xs font-medium tracking-wide text-stone-300">
+              Tell the story <span class="text-amber-300">*</span>
+            </label>
+            <textarea
+              id="story"
+              name="story"
+              [(ngModel)]="form.story"
+              required
+              minlength="1"
+              maxlength="5000"
+              rows="6"
+              placeholder="A conversation you still remember, the sound of their laughter, something they taught you..."
+              class="memory-input w-full resize-y rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-7 outline-none transition placeholder:text-stone-600 focus:border-amber-200/60"
+            ></textarea>
+          </div>
+
+          <div>
+            <label for="favoriteThings" class="mb-2 block text-xs font-medium tracking-wide text-stone-300">
+              Little things that remind you
+            </label>
+            <input
+              id="favoriteThings"
+              name="favoriteThings"
+              [(ngModel)]="form.favoriteThings"
+              placeholder="Old songs, chai, marigolds"
+              class="memory-input w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm outline-none transition placeholder:text-stone-600 focus:border-amber-200/60"
+            />
+            <p class="mt-2 text-[11px] leading-5 text-stone-500">
+              Separate with commas — favourite foods, songs, places, or habits.
+            </p>
+          </div>
+
+          <div>
+            <label for="memoryDate" class="mb-2 block text-xs font-medium tracking-wide text-stone-300">
+              When did this happen?
+              <span class="font-normal text-stone-500">(optional)</span>
+            </label>
+            <input
+              id="memoryDate"
+              name="memoryDate"
+              type="date"
+              [(ngModel)]="form.memoryDate"
+              class="memory-input w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3.5 text-sm outline-none transition focus:border-amber-200/60"
+            />
+          </div>
+
+          <div class="flex flex-wrap gap-3 border-t border-white/[0.08] pt-5">
+            <button
+              type="submit"
+              [disabled]="saving || memoryForm.invalid"
+              class="flex-1 rounded-xl bg-amber-200 px-5 py-3.5 text-sm font-semibold text-stone-950 transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {{ saving ? 'Saving your memory…' : editingId ? 'Save your changes' : '✳  Preserve this memory' }}
+            </button>
+
+            @if (editingId) {
+              <button
+                type="button"
+                (click)="resetForm()"
+                class="rounded-xl border border-white/10 px-4 py-3 text-sm text-stone-300 transition hover:bg-white/5"
+              >
+                Cancel
+              </button>
+            }
+          </div>
+
+          <p class="text-center text-[11px] text-stone-500">
+            A small moment, kept safe in your collection.
+          </p>
+        </form>
+      </section>
+
+      <section class="min-w-0">
+        <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-300">
+              Your personal archive
+            </p>
+            <h2 class="editorial-heading mt-2 text-3xl font-medium sm:text-4xl">
+              Collected moments<span class="text-amber-200">.</span>
+            </h2>
+          </div>
+
+          <span class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-stone-300">
+            {{ memories().length }} {{ memories().length === 1 ? 'story' : 'stories' }}
+          </span>
+        </div>
+
+        @if (loading) {
+          <div class="rounded-3xl border border-white/10 bg-white/[0.025] p-10 text-center">
+            <div class="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-amber-200/20 border-t-amber-200"></div>
+            <p class="text-sm text-stone-400">Gathering your memories…</p>
+          </div>
+        } @else if (memories().length === 0) {
+          <div class="empty-garden rounded-3xl border border-dashed border-amber-200/20 px-6 py-16 text-center sm:px-10">
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-amber-200/20 bg-amber-200/[0.06] text-3xl text-amber-200">
+              ✳
+            </div>
+            <p class="mt-6 text-[10px] font-semibold uppercase tracking-[0.24em] text-amber-300">
+              An open page
+            </p>
+            <h3 class="editorial-heading mt-3 text-2xl font-medium">Every garden starts somewhere.</h3>
+            <p class="mx-auto mt-3 max-w-sm text-sm leading-7 text-stone-400">
+              Your first memory doesn't need to be extraordinary. Save a name, a story, or one small detail you want to hold on to.
+            </p>
+          </div>
+        } @else {
+          <div class="space-y-4">
+            @for (memory of memories(); track memory._id) {
+              <article class="memory-card group relative overflow-hidden rounded-3xl border border-white/[0.09] bg-[#151613] p-6 transition duration-300 hover:-translate-y-0.5 hover:border-amber-200/30 sm:p-7">
+                <div class="absolute inset-y-6 left-0 w-[2px] rounded-r-full bg-amber-200/0 transition group-hover:bg-amber-200/60"></div>
+
+                <div class="flex items-start gap-4">
+                  <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-amber-200/15 bg-gradient-to-br from-amber-200/[0.14] to-amber-200/[0.02] text-lg font-medium text-amber-200">
+                    {{ memory.personName.charAt(0).toUpperCase() }}
+                  </div>
+
+                  <div class="min-w-0 flex-1">
+                    @if (memory.memoryDate) {
+                      <p class="mb-2 text-[10px] font-medium uppercase tracking-[0.15em] text-amber-200/80">
+                        {{ memory.memoryDate | date:'mediumDate' }}
+                      </p>
+                    } @else {
+                      <p class="mb-2 text-[10px] font-medium uppercase tracking-[0.15em] text-stone-500">
+                        A moment remembered
+                      </p>
+                    }
+
+                    <h3 class="editorial-heading break-words text-2xl font-medium leading-snug text-stone-100">
+                      {{ memory.title }}
+                    </h3>
+
+                    <p class="mt-2 text-sm text-stone-400">
+                      {{ memory.personName }}
+                      @if (memory.relationship) {
+                        <span class="text-stone-600"> · </span>{{ memory.relationship }}
+                      }
+                    </p>
+                  </div>
+                </div>
+
+                <div class="my-5 h-px bg-gradient-to-r from-amber-200/20 via-white/[0.07] to-transparent"></div>
+
+                <p class="whitespace-pre-line break-words text-sm leading-7 text-stone-300">
+                  {{ memory.story }}
+                </p>
+
+                @if (memory.favoriteThings.length > 0) {
+                  <div class="mt-5 flex flex-wrap gap-2">
+                    @for (thing of memory.favoriteThings; track thing) {
+                      <span class="rounded-full border border-amber-200/10 bg-amber-200/[0.04] px-3 py-1.5 text-[11px] text-amber-100/80">
+                        {{ thing }}
+                      </span>
+                    }
+                  </div>
+                }
+
+                <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.07] pt-4">
+                  <span class="text-[11px] text-stone-500">
+                    Added {{ memory.createdAt ? (memory.createdAt | date:'mediumDate') : 'recently' }}
+                  </span>
+
+                  <div class="flex gap-2">
+                    <button
+                      type="button"
+                      (click)="editMemory(memory)"
+                      class="rounded-lg border border-white/10 px-3.5 py-2 text-xs text-stone-300 transition hover:border-amber-200/30 hover:text-amber-100"
+                    >
+                      Edit story
+                    </button>
+
+                    <button
+                      type="button"
+                      (click)="deleteMemory(memory)"
+                      class="rounded-lg border border-red-300/10 px-3.5 py-2 text-xs text-red-300/80 transition hover:border-red-300/30 hover:bg-red-400/[0.06] hover:text-red-200"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </section>
+    </div>
+
+    <footer class="mt-16 border-t border-white/[0.08] py-6 text-center">
+      <p class="editorial-heading text-lg italic text-stone-400">
+        Some things are too meaningful to be forgotten.
+      </p>
+      <p class="mt-2 text-[10px] uppercase tracking-[0.2em] text-stone-600">
+        Afterlight · Keep the stories close
+      </p>
+    </footer>
+  </main>
+</div>
