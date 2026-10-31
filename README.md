@@ -6,7 +6,9 @@ Afterlight is a personal memory journal for preserving meaningful stories, peopl
 
 > Some stories deserve more than a place in our minds. They deserve a place to stay.
 
-**Live demo:** [Add your Vercel deployment URL]**Source code:** [Add your GitHub repository URL]
+**Live demo:**  [afterlight-kohl-iota.vercel.app](https://afterlight-kohl-iota.vercel.app/)
+
+**Source code:**  [github.com/pratikraut8889-max/afterlight.git](https://github.com/pratikraut8889-max/afterlight.git)
 
 > **Project status:** Working MVP. Memory creation, listing, editing, deletion, and MongoDB persistence have been tested. Authentication, per-user access control, and the planned AI features are not yet included in the implementation described here.
 
